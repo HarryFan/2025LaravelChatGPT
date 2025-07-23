@@ -5,7 +5,7 @@ Content-Type: application/json
 {
   "original_url": "https://www.riyar.com.tw",
   "expires_at": "2025-12-31 23:59:59",
-  "max_clicks": 10
+  "max_clicks": 999999
 }
 
 HTTP/1.1 201  - Created
@@ -13,7 +13,7 @@ host: localhost:8000
 connection: close
 x-powered-by: PHP/8.4.8
 cache-control: no-cache, private
-date: Wed, 23 Jul 2025 17:47:03 GMT
+date: Wed, 23 Jul 2025 17:48:33 GMT
 content-type: application/json
 access-control-allow-origin: *
 ###
