@@ -1,0 +1,49 @@
+### 1. 建立短網址
+POST http://localhost:8000/api/v1/shorten
+Content-Type: application/json
+
+{
+  "original_url": "https://www.google.com",
+  "expires_at": "2025-12-31 23:59:59",
+  "max_clicks": 10
+}
+
+###
+
+### 2. 使用短網址重新導向
+# 請將 GUVFR1 替換為實際的短碼
+GET http://localhost:8000/s/GUVFR1
+
+###
+
+### 3. 取得短網址統計資料
+# 請將 GUVFR1 替換為實際的短碼
+GET http://localhost:8000/api/v1/shorten/GUVFR1/stats
+
+
+HTTP/1.1 404  - Not Found
+host: localhost:8000
+connection: close
+x-powered-by: PHP/8.4.8
+cache-control: no-cache, private
+date: Wed, 23 Jul 2025 13:14:58 GMT
+content-type: text/html; charset=UTF-8
+access-control-allow-origin: *
+
+HTTP/1.1 404  - Not Found
+host: localhost:8000
+connection: close
+x-powered-by: PHP/8.4.8
+cache-control: no-cache, private
+date: Wed, 23 Jul 2025 13:14:58 GMT
+content-type: text/html; charset=UTF-8
+set-cookie: XSRF-TOKEN=eyJpdiI6IlBUb1FZUXJ2S2pFc3FTSnkvTzZSeFE9PSIsInZhbHVlIjoiNllBSEZTMU9MSEdMbVpQcm4waWVtM0pQVUJRWEMxdDZLcGJqRnRySGl6K3JNak1NNDVWV0xYR21keGljNkFhRGx0VGIrNFVRTnE4VFlHbUgrYnQ2ZU1pbXFnY3A1VGRoS3lRNkR5dk8vOUR3bXRUK21VQVRwZmF1c0puS1FtcmciLCJtYWMiOiI1ZWExODM4YzZmYTA1YTY5M2NhMDYzMzdlYzA2MWIyNjIzMmM5ZTIxY2U0YjcwNDNmNjc3MDgxMTJlYTk1NThiIiwidGFnIjoiIn0%3D; expires=Wed, 23 Jul 2025 15:14:58 GMT; Max-Age=7200; path=/; samesite=lax, laravel_session=eyJpdiI6IlFnUmZsUjdkLzRadHNib3QzZkZDeXc9PSIsInZhbHVlIjoibHpyd0V4WEp6QjVOTW1BQ0U2enhJRjJQZExrWUpXRHAwb1hxQmp0Z3RKbk13VWRrYm4vVW1PU0NiVHdCK0VacG1XTGhiekZ2ck1hSmpUNHhPSVJIdzBIUmVtMjk0VmZadGdzTjRDMHlQVG9GWldsa25lYVRMZ1VSSURGanJtVVEiLCJtYWMiOiI3OWJiNjM3MGU3ZDUzYjdhYjIzNmUzNTBkZWQ4NmMzZTI3YTIxYjhjYTQzYTQ3ZWY0ZjEwZmVjODEwYWJkZjYzIiwidGFnIjoiIn0%3D; expires=Wed, 23 Jul 2025 15:14:58 GMT; Max-Age=7200; path=/; httponly; samesite=lax
+
+HTTP/1.1 404  - Not Found
+host: localhost:8000
+connection: close
+x-powered-by: PHP/8.4.8
+cache-control: no-cache, private
+date: Wed, 23 Jul 2025 13:14:58 GMT
+content-type: text/html; charset=UTF-8
+access-control-allow-origin: *

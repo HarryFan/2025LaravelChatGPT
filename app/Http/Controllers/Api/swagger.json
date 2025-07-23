@@ -1,0 +1,207 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "短網址服務 API 文件",
+    "version": "1.0.0",
+    "description": "提供短網址生成與管理功能"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000/api/v1",
+      "description": "本地開發環境"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Short URLs",
+      "description": "短網址相關操作"
+    }
+  ],
+  "paths": {
+    "/shorten": {
+      "post": {
+        "tags": ["Short URLs"],
+        "summary": "建立短網址",
+        "description": "建立一個新的短網址",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["original_url"],
+                "properties": {
+                  "original_url": {
+                    "type": "string",
+                    "format": "uri",
+                    "example": "https://example.com"
+                  },
+                  "expires_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2025-12-31 23:59:59"
+                  },
+                  "max_clicks": {
+                    "type": "integer",
+                    "example": 100
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "短網址建立成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "original_url": {
+                          "type": "string",
+                          "example": "https://example.com"
+                        },
+                        "short_url": {
+                          "type": "string",
+                          "example": "http://localhost:8000/s/abc123"
+                        },
+                        "short_code": {
+                          "type": "string",
+                          "example": "abc123"
+                        },
+                        "expires_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-12-31 23:59:59"
+                        },
+                        "max_clicks": {
+                          "type": "integer",
+                          "example": 100
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-07-23 22:00:00"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "驗證錯誤"
+          }
+        }
+      }
+    },
+    "/s/{short_code}": {
+      "get": {
+        "tags": ["Short URLs"],
+        "summary": "使用短網址重新導向",
+        "description": "使用短碼重新導向到原始網址",
+        "parameters": [
+          {
+            "name": "short_code",
+            "in": "path",
+            "required": true,
+            "description": "短碼",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "重新導向到原始網址"
+          },
+          "404": {
+            "description": "找不到指定的短網址"
+          },
+          "410": {
+            "description": "此短網址已過期"
+          }
+        }
+      }
+    },
+    "/shorten/{short_code}/stats": {
+      "get": {
+        "tags": ["Short URLs"],
+        "summary": "取得短網址統計資料",
+        "description": "取得指定短碼的統計資料",
+        "parameters": [
+          {
+            "name": "short_code",
+            "in": "path",
+            "required": true,
+            "description": "短碼",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功取得統計資料",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "short_code": {
+                          "type": "string",
+                          "example": "abc123"
+                        },
+                        "original_url": {
+                          "type": "string",
+                          "example": "https://example.com"
+                        },
+                        "click_count": {
+                          "type": "integer",
+                          "example": 5
+                        },
+                        "max_clicks": {
+                          "type": "integer",
+                          "example": 100
+                        },
+                        "expires_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-12-31 23:59:59"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-07-23 22:00:00"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "找不到指定的短網址"
+          }
+        }
+      }
+    }
+  }
+}
