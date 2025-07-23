@@ -18,6 +18,7 @@ return [
                 'docs_yaml' => 'swagger.yaml',
                 'annotations' => [
                     base_path('app/Http/Controllers/Api'),
+                    base_path('app/Http/Controllers/Api/Swagger'),
                 ],
                 'use_absolute_path' => env('L5_SWAGGER_USE_ABSOLUTE_PATH', true),
                 'swagger_ui_assets_path' => env('L5_SWAGGER_UI_ASSETS_PATH', 'vendor/swagger-api/swagger-ui/dist/'),

@@ -31,11 +31,22 @@ use OpenApi\Annotations as OA;
  * )
  */
 
+/**
+ * @OA\Tag(
+ *     name="Short URLs",
+ *     description="短網址相關操作"
+ * )
+ */
 class ShortUrlController extends Controller
 {
     /**
+     * @OA\PathItem(
+     *     path="/api/v1"
+     * )
+     */
+    /**
      * @OA\Post(
-     *     path="/shorten",
+     *     path="/api/v1/shorten",
      *     summary="建立短網址",
      *     tags={"Short URLs"},
      *     @OA\RequestBody(
@@ -95,6 +106,33 @@ class ShortUrlController extends Controller
         ], 201);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/s/{code}",
+     *     summary="重定向到原始網址",
+     *     description="根據短網址代碼重定向到對應的原始網址",
+     *     tags={"Short URLs"},
+     *     @OA\Parameter(
+     *         name="code",
+     *         in="path",
+     *         required=true,
+     *         description="短網址代碼",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=301,
+     *         description="重定向到原始網址"
+     *     ),
+     *     @OA\Response(
+     *         response=410,
+     *         description="短網址已過期或已達到點擊上限"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="短網址不存在"
+     *     )
+     * )
+     */
     public function redirect(string $code)
     {
         $shortUrl = ShortUrl::where('short_code', $code)->firstOrFail();
@@ -124,6 +162,87 @@ class ShortUrlController extends Controller
         return redirect()->away($shortUrl->original_url, 301);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/v1/stats/{code}",
+     *     summary="獲取短網址統計信息",
+     *     tags={"Short URLs"},
+     *     @OA\Parameter(
+     *         name="code",
+     *         in="path",
+     *         required=true,
+     *         description="短網址代碼",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="成功獲取統計信息",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(property="original_url", type="string"),
+     *                 @OA\Property(property="short_url", type="string"),
+     *                 @OA\Property(property="short_code", type="string"),
+     *                 @OA\Property(property="total_clicks", type="integer"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time"),
+     *                 @OA\Property(property="expires_at", type="string", format="date-time", nullable=true),
+     *                 @OA\Property(
+     *                     property="stats",
+     *                     type="object",
+     *                     @OA\Property(property="total_clicks", type="integer"),
+     *                     @OA\Property(property="unique_visitors", type="integer"),
+     *                     @OA\Property(
+     *                         property="browsers",
+     *                         type="array",
+     *                         @OA\Items(
+     *                             @OA\Property(property="browser", type="string"),
+     *                             @OA\Property(property="count", type="integer")
+     *                         )
+     *                     ),
+     *                     @OA\Property(
+     *                         property="platforms",
+     *                         type="array",
+     *                         @OA\Items(
+     *                             @OA\Property(property="platform", type="string"),
+     *                             @OA\Property(property="count", type="integer")
+     *                         )
+     *                     ),
+     *                     @OA\Property(
+     *                         property="devices",
+     *                         type="array",
+     *                         @OA\Items(
+     *                             @OA\Property(property="device_type", type="string"),
+     *                             @OA\Property(property="count", type="integer")
+     *                         )
+     *                     ),
+     *                     @OA\Property(
+     *                         property="referrers",
+     *                         type="array",
+     *                         @OA\Items(
+     *                             @OA\Property(property="referer", type="string"),
+     *                             @OA\Property(property="count", type="integer")
+     *                         )
+     *                     ),
+     *                     @OA\Property(
+     *                         property="clicks_by_date",
+     *                         type="array",
+     *                         @OA\Items(
+     *                             @OA\Property(property="date", type="string", format="date"),
+     *                             @OA\Property(property="count", type="integer")
+     *                         )
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="短網址不存在"
+     *     )
+     * )
+     */
     public function stats(string $code): JsonResponse
     {
         $shortUrl = ShortUrl::withCount('clickLogs')
@@ -181,6 +300,41 @@ class ShortUrlController extends Controller
         ]);
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/api/v1/url/{code}",
+     *     summary="刪除短網址",
+     *     tags={"Short URLs"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(
+     *         name="code",
+     *         in="path",
+     *         required=true,
+     *         description="短網址代碼",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="短網址刪除成功",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="短網址已刪除")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="未授權"
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="沒有權限"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="短網址不存在"
+     *     )
+     * )
+     */
     public function destroy(string $code): JsonResponse
     {
         $shortUrl = ShortUrl::where('short_code', $code)->firstOrFail();

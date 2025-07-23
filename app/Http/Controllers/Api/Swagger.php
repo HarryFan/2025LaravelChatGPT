@@ -1,9 +1,5 @@
 <?php
 
-namespace App\Http\Controllers;
-
-use OpenApi\Annotations as OA;
-
 /**
  * @OA\Info(
  *     version="1.0.0",
@@ -15,7 +11,5 @@ use OpenApi\Annotations as OA;
  *     description="本地開發環境"
  * )
  */
-abstract class Controller
-{
-    //
-}
+
+// 這個文件僅用於存放 Swagger 註解，不需要包含任何 PHP 代碼
